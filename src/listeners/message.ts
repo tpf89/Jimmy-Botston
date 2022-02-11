@@ -49,6 +49,11 @@ export default (client: Client): void => {
         const initiator: User = oldMsg.mentions.users?.first() as User;
         const victim: User = newMsg.mentions.users?.first() as User;
         
+        if (initiator.id === victim.id) {
+            messageIds.delete(oldMsg.id);
+            return;
+        }
+
         const initiatorMember: GuildMember = oldMsg.mentions.members?.first() as GuildMember;
         const victimMember: GuildMember = newMsg.mentions.members?.first() as GuildMember;
 
