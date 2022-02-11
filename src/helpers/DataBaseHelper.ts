@@ -48,9 +48,9 @@ export class DataBaseHelper {
         }
     }
 
-    public static async getEntrance(fighter: IFighter, guildId: string): Promise<string|null> {
+    public static async getEntrance(user: User, guildId: string): Promise<string|null> {
         try {
-            let entrance = await this.entrances.findOne({ where: { userId: fighter.user.id, guildId: guildId }});
+            let entrance = await this.entrances.findOne({ where: { userId: user.id, guildId: guildId }});
             let entranceLink = entrance.get('entranceLink');
 
             return entranceLink;

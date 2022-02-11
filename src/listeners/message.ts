@@ -4,6 +4,7 @@ import { DiscordHelper } from "../helpers/DiscordHelper";
 import { IFight } from "../models/IFight";
 import { IFighter } from "../models/IFighter";
 import { DataBaseHelper } from "../helpers/DataBaseHelper";
+import { BotHelper } from "../helpers/BotHelper";
 
 export default (client: Client): void => {
     let messageIds: Map<string, Date> = new Map<string, Date>();
@@ -102,31 +103,21 @@ export default (client: Client): void => {
 
         const champRole: string|null = await DataBaseHelper.getChampRole(oldMsg.guildId as string);
 
-        let fighter1: IFighter = {
-            user: initiator,
-            isChampion: initiatorMember.roles.cache.some(role => role.id === champRole)
-        }
-
-        let fighter2: IFighter = {
-            user: victim,
-            isChampion: victimMember.roles.cache.some(role => role.id === champRole)
-        }
+        let fighter1: IFighter = await BotHelper.getFighter(initiatorMember, champRole);
+        let fighter2: IFighter = await BotHelper.getFighter(victimMember, champRole);
 
         const fight: IFight = { fighter1: fighter1, fighter2: fighter2, initiatedAt: oldMsg.createdAt };
     
-        let fighter1Entrance: string|null = await DataBaseHelper.getEntrance(fight.fighter1, newMsg.guildId as string);
-        let fighter2Entrance: string|null = await DataBaseHelper.getEntrance(fight.fighter2, newMsg.guildId as string);
-
-        await newMessage.reply(getBothEntranceStrings(fight, fighter1Entrance, fighter2Entrance));
+        await newMessage.reply(getBothEntranceStrings(fight));
     });
 
-    function getEntranceString(fighter: IFighter, entranceLink: string|null) {
-        return `Making their way to the ring \n**<@${fighter.user.id}>**${fighter.isChampion ? ',\nthe current Champion': ''}\nEntrance music: ${entranceLink ? `<${entranceLink}>` : 'none set (use **/addentrance** or write **\'jimmy addentrance <YT link>\'** to add your entrance music)'}`;
+    function getEntranceString(fighter: IFighter) {
+        return `Making their way to the ring \n**<@${fighter.user.id}>**${fighter.isChampion ? ',\nthe current Champion': ''}\nEntrance music: ${fighter.entranceVideo ? fighter.entranceVideo.snippet.title : 'Title n/a'} ${fighter.entranceLink ? `(<${fighter.entranceLink}>)` : 'none set (use **/addentrance** or write **\'jimmy addentrance <YT link>\'** to add your entrance music)'}`;
     };
 
-    function getBothEntranceStrings(fight: IFight, entranceLink1: string|null, entranceLink2: string|null) {
-        const entrance1: string = getEntranceString(fight.fighter1, entranceLink1);
-        const entrance2: string = getEntranceString(fight.fighter2, entranceLink2);
+    function getBothEntranceStrings(fight: IFight) {
+        const entrance1: string = getEntranceString(fight.fighter1);
+        const entrance2: string = getEntranceString(fight.fighter2);
 
         return `${entrance1}\n\n${entrance2}`;
     }

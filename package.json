@@ -5,10 +5,12 @@
     "clean": "tsc --build --clean"
   },
   "dependencies": {
+    "@types/gapi": "^0.0.41",
     "discord.js": "^13.6.0",
     "get-youtube-title": "^1.0.1",
     "sequelize": "^6.15.0",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "youtube.ts": "^0.2.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.17",

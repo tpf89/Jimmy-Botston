@@ -4,7 +4,7 @@ import ready from './listeners/ready';
 import message from './listeners/message';
 import Credentials from './Credentials.json';
 
-const token = Credentials.authToken;
+const token = Credentials.discord.authToken;
 console.log('Bot is starting...');
 
 const client = new Client({
