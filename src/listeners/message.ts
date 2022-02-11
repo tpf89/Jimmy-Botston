@@ -31,6 +31,49 @@ export default (client: Client): void => {
         clearing = false;
     };
 
+
+    client.on("messageCreate", async (message: Message) => {
+        let content = 'Something went wrong, try again or contact skunkner';
+
+        if (!message.content.toLocaleLowerCase().startsWith("jimmy addentrance ")) {
+            return;
+        }
+
+        try {
+            const splitted = message.content.split(' ');
+
+            if (splitted.length < 3) {
+                return;
+            }
+
+            const link = splitted[2];
+        
+            let ytRegExp: RegExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^'&?\/\s]{11})/gi;
+            let isValid: boolean = (link).match(ytRegExp) !== null;
+    
+            if (!isValid) {
+                content = 'Link has to be a valid YouTube URL, please try again.';
+                console.log(content);
+            } else {
+                const success: boolean = await DataBaseHelper.addEntrance(message, link as string);
+
+                if (success)
+                {
+                    content = 'Your new entrance music has been set.';
+                    console.log(content);
+                }  
+            }
+        }
+        catch (ex) {
+            content = 'Something went wrong, try again or contact skunkner';
+            console.log(ex);
+        }
+       
+        await message.reply({
+            content
+        });
+    });
+
     client.on("messageUpdate", async (oldMessage: Message<boolean> | PartialMessage, newMessage:  Message<boolean> | PartialMessage) => {
         if (!oldMessage || !newMessage) {
             return;
@@ -78,7 +121,7 @@ export default (client: Client): void => {
     });
 
     function getEntranceString(fighter: IFighter, entranceLink: string|null) {
-        return `Making their way to the ring \n**<@${fighter.user.id}>**${fighter.isChampion ? ',\nthe current Champion': ''}\nEntrance music: ${entranceLink ? `<${entranceLink}>` : 'none set (use **/addentrance** to add your entrance music)'}`;
+        return `Making their way to the ring \n**<@${fighter.user.id}>**${fighter.isChampion ? ',\nthe current Champion': ''}\nEntrance music: ${entranceLink ? `<${entranceLink}>` : 'none set (use **/addentrance** or write **\'jimmy addentrance [YT link]\'** to add your entrance music)'}`;
     };
 
     function getBothEntranceStrings(fight: IFight, entranceLink1: string|null, entranceLink2: string|null) {

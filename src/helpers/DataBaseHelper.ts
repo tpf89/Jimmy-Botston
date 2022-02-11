@@ -1,4 +1,4 @@
-import { Interaction, User, Permissions, GuildMember, Role } from "discord.js";
+import { Interaction, User, Permissions, GuildMember, Role, Message } from "discord.js";
 import { IFighter } from "src/models/IFighter";
 
 const { Sequelize, Model, DataTypes } = require('sequelize');
@@ -33,9 +33,9 @@ export class DataBaseHelper {
         }
     }
 
-    public static async addEntrance(interaction: Interaction, entranceLink: string): Promise<boolean> {
+    public static async addEntrance(interaction: Interaction|Message, entranceLink: string): Promise<boolean> {
         try {
-            let entrance = await this.entrances.findOrCreate({ where: { userId: interaction.user.id, guildId: interaction.guildId }});
+            let entrance = await this.entrances.findOrCreate({ where: { userId: interaction.member?.user.id, guildId: interaction.guildId }});
             let currentEntranceLink = entrance[0].get('entranceLink');
 
             if (entranceLink !== currentEntranceLink) {
