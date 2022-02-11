@@ -121,7 +121,7 @@ export default (client: Client): void => {
     });
 
     function getEntranceString(fighter: IFighter, entranceLink: string|null) {
-        return `Making their way to the ring \n**<@${fighter.user.id}>**${fighter.isChampion ? ',\nthe current Champion': ''}\nEntrance music: ${entranceLink ? `<${entranceLink}>` : 'none set (use **/addentrance** or write **\'jimmy addentrance [YT link]\'** to add your entrance music)'}`;
+        return `Making their way to the ring \n**<@${fighter.user.id}>**${fighter.isChampion ? ',\nthe current Champion': ''}\nEntrance music: ${entranceLink ? `<${entranceLink}>` : 'none set (use **/addentrance** or write **\'jimmy addentrance <YT link>\'** to add your entrance music)'}`;
     };
 
     function getBothEntranceStrings(fight: IFight, entranceLink1: string|null, entranceLink2: string|null) {
