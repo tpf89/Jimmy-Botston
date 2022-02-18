@@ -19,12 +19,13 @@ export const AddEntrance: Command = {
         let content = 'Something went wrong, try again or contact skunkner';
 
         try {
-            const link = interaction.options.get('link', true);
+            let link = interaction.options.get('link', true);
     
             if (!link.value) {
                 return;
             }
     
+            link.value = (link.value as string).replace('<', '').replace('>', '')
             let ytRegExp: RegExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^'&?\/\s]{11})/gi;
             let isValid: boolean = (link.value as string).match(ytRegExp) !== null;
     

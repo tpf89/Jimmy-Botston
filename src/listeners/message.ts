@@ -47,7 +47,7 @@ export default (client: Client): void => {
                 return;
             }
 
-            const link = splitted[2];
+            const link = splitted[2].replace('<', '').replace('>', '');
         
             let ytRegExp: RegExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^'&?\/\s]{11})/gi;
             let isValid: boolean = (link).match(ytRegExp) !== null;
